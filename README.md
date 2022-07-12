@@ -1,8 +1,15 @@
-# STGAT
-STGAT: Modeling Spatial-Temporal Interactions for Human Trajectory Prediction
+# STGAT v/s Uniform Predictor
 
-## Correction
-Our statement about Average Displacement Error (ADE) in the paper is wrong, and it should be RMSE or L2 distance (as in [SocialAttention](https://arxiv.org/pdf/1710.04689.pdf) and [SocialGan](https://arxiv.org/pdf/1803.10892.pdf)).
+A significant amount of the recent forecasting method evaluate their performance using only the Top-20 metric. This can be highly misleading due to a variety of reasons. First, this metric only measures model diversity: the ability of the model to cover all modes. It does not measure whether all modes are socially plausible (low collision rate for all modes). Second, it is also difficult to objectively compare methods using Top-20 because approaches that produce wildly different output samples may yield similar Top-20 values. In this repository, we show a simple uniform predictor that outputs uniformly-spaced samples (see table below) performs similar to a state-of-the-art STGAT method.
+
+| Method | ETH | Hotel | Univ | Zara1 | Zara2 |
+| ------ | ------ | ------ | ------ | ------ | ------ |
+| STGAT | 0.65 / 1.12 | 0.35 / 0.66 | 0.52 / 1.10 | 0.34 / 0.60 | 0.29 / 0.60 |
+| SUP | 0.64 / 1.14 | 0.25 / 0.45 | 0.51 / 1.09 | 0.40 / 0.86 | 0.29 / 0.62 |
+
+We believe it is of utmost importance to not rely on the Top-20 metric only. We need additional multimodal metrics that measure social acceptability (like average collisions) and the likelihood of the ground truth (like negative log-likelihood) to obtain a more holistic view. Check out the [TrajNet++ challenge](https://www.aicrowd.com/challenges/trajnet-a-trajectory-forecasting-challenge) as it incorporates these new metrics for an objective evaluation.
+
+
 
 ## Requirements
 * Python 3
@@ -15,20 +22,8 @@ All the data comes from the [SGAN](https://github.com/agrimgupta92/sgan) model w
 ## How to Run
 * First `cd STGAT`
 * To train the model run `python train.py` (see the code to understand all the arguments that can be given to the command)
-* To evalutae the model run `python evaluate_model.py`
-* Using the default parameters in the code, you can get most of the numerical results presented in the paper. But a reasonable attention visualization may require trained for a longer time and tuned some parameters. For example, for the zara1 dataset and `pred_len` is 8 time-steps,, you can set `num_epochs` to `600` (line 36 in `train.py`), and the `learning rate` in step3 to `1e-4` (line 180 in `train.py`).
-* The attachment folder contains the code that produces the attention figures presented in the paper
-* Check out the issue of this repo to find out how to get better results on the ETH dataset.
+* To evaluate the STGAT model run `python evaluate_model.py`
+* To evaluate the Uniform Predictor model run `python evaluate_uniform_predictor.py`
 
 ## Acknowledgments
-All data and part of the code comes from the [SGAN](https://github.com/agrimgupta92/sgan) model. If you find this code useful in your research then please also cite their paper.
-
-If you have any questions, please contact huangyingfan@outlook.com, and if you find this repository useful for your research, please cite the following paper:
-```
-@InProceedings{Huang_2019_ICCV,
-author = {Huang, Yingfan and Bi, Huikun and Li, Zhaoxin and Mao, Tianlu and Wang, Zhaoqi},
-title = {STGAT: Modeling Spatial-Temporal Interactions for Human Trajectory Prediction},
-booktitle = {The IEEE International Conference on Computer Vision (ICCV)},
-month = {October},
-year = {2019}
-}
+All data and part of the code comes from the [SGAN](https://github.com/agrimgupta92/sgan) model.
